@@ -7,4 +7,14 @@ def create_card(val):
     card = str(faces[val%13]) + suits[int(val/13)]
     return card
 
-print(create_card(1))
+def display_card(c):
+    print(c)
+    split = list(c)
+    print(split)
+    suitHash = {'S': '♤', 'H': '♡', 'D': '♦', 'C': '♧'}
+    suit = suitHash[split[1]]
+    card = str(split[0]) + suit
+    return card
+
+ace_spade = create_card(12)
+print(display_card(ace_spade))
