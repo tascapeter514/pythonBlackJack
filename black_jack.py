@@ -16,23 +16,24 @@ def display_card(c):
     card = str(split[0]) + suit
     return card
 
-ace_spade = create_card(45)
-# print(display_card(ace_spade))
+# procedural method for shuffling deck
+# def shuffle_deck():
+#     deck = [create_card(x) for x in range(52)]
+#     count = len(deck)
+#     print(count)
+#     for i in range(count - 1, 0, -1):
+#         j = random.randint(0, i)
+#         deck[i], deck[j] = deck[j], deck[i]
+#     return deck
 
-deck = [create_card(x) for x in range(52)]
+# OOP method for shuffling deck
 
-def shuffle_deck(d):
-    print(d)
-    count = len(d)
-    print(count)
-    for i in range(count - 1, 0, -1):
-        j = random.randint(0, i)
-        d[i], d[j] = d[j], d[i]
-    return d
+
+
 
     
 
-
+# alternative shuffle algorithm
 # def shuffle_deck(d):
 #     count = len(d)
 #     for val in d:
@@ -43,9 +44,19 @@ def shuffle_deck(d):
 #     print(len(d))
 #     return d
 
+def deal(deck, player, dealer):
+    print('The dealer has started to deal the cards')
+    dealer_hand.append(deck.pop())
+    print(f"The deal has been dealt a {display_card(dealer_hand[0])}")
+    playerOne_hand.append(deck.pop())
+    print(f"Player One has been dealt a {display_card(playerOne_hand[0])} ")
 
+def runGame():
+    player_hand = []
+    dealer_hand = []
+    deck = shuffle_deck()
+    
 
-print(shuffle_deck(deck))
 
 
     
