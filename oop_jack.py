@@ -9,34 +9,45 @@ class Deck:
         for i in range(len(self._deck)):
             j = random.randint(0, i)
             self._deck[i], self._deck[j] = self._deck[j], self._deck[i]
-        return self._deck
+        return self
     
     def deal(self):
         print(self._deck)
-        hand = [self._deck.pop() for i in range(1)]
-        return hand
+        # hand = [self._deck.pop() for i in range(1)]
+        return self._deck.pop()
 
 class Player:
-    def __init__(self, name, hand):
+    def __init__(self, name):
         self.name = name
-        self.hand = hand
-    
-    def get_count(self):
-        faces = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
-        for card in self.hand:
+        self.hand = []
 
-        
-        
-        
-
-
+    def draw_card(self, card):
+        self.hand.append(card)
+        return self
 
     
+    # def get_count(self):
+    #     faces = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
+    #     for card in self.hand:
+    #         value = card.split()[0]
+            
 
-deck = Deck()
-# deck = deck.shuffle()
-deck.shuffle()
-print(deck.deal())
-print(deck.deal())
+player = Player('Petey')
+dealer = Player('dealer')
+def deal_round():
+    deck = Deck().shuffle()
+    for i in range(4):
+        draw = deck.deal()
+        dealer.draw_card(draw) if i % 2 == 0 else player.draw_card(draw)
+    print(dealer.hand, player.hand)
+
+deal_round()
+print(dealer.hand, player.hand)
+        
+
+    
+        
+        
+    
 
 
