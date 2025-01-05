@@ -1,4 +1,15 @@
+
 import random
+import sys
+
+#start the game
+a = input("WELCOME TO PETE'S BLACKJACK! TO START, TYPE 'yes' AND TO QUITE TYPE 'no'\n")
+if a.lower() == 'no':
+    sys.exit()
+else:
+    print("LET'S START SOME BLACKJACK BABY!")
+
+
 class Deck:
 
     def __init__(self, suits = ['S', 'H', 'D', 'C'], faces = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'], values = [x for x in range(52)]):
@@ -12,8 +23,6 @@ class Deck:
         return self
     
     def deal(self):
-        # print(self._deck)
-        # hand = [self._deck.pop() for i in range(1)]
         return self._deck.pop()
 
 class Player:
@@ -43,8 +52,7 @@ class Player:
 class Human(Player):
     def choice(self):
         while self.count() <= 21:
-            c = input(f"Your hand is {self.hand}. Would you like to stand or hit?")
-
+            c = input(f"Your hand is {self.hand}. Would you like to stand or hit?\n")
             if c != 'stand' and c != 'hit':
                 print('Please enter "stand" or "hit"')
             else:
@@ -54,10 +62,7 @@ class Dealer(Player):
     def choice(self):
         print(self.count())
         return 'stand' if self.count() >= 17 else 'hit'
-        # if self.count() >= 17:
-        #     return 'stand'
-        # else:
-        #     return 'hit'
+
 
 
 dealer = Dealer('Bob')
@@ -70,11 +75,11 @@ print(dealer.choice())
 
 
 
-# player = Human('Petey')
+player = Human('Petey')
 
-# player.draw_card('JS')
-# player.draw_card('5S')
-# print(player.choice())
+player.draw_card('JS')
+player.draw_card('5S')
+print(player.choice())
 
 
             
