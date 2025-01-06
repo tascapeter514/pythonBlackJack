@@ -103,8 +103,14 @@ print(f"Your hand is {player.display_hand()}\n {dealer.name}'s hand is {dealer.d
 if player.choice() == 'hit':
     draw = deck.deal()
     player.draw_card(draw)
-    drawn = player.display_hand()[-2:]
-    print(f"{player.name}, you've drawn a {type(player.display_hand())}. Your hand is now {player.display_hand()}")
+    drawn_card = player.display_hand()[-2:]
+    print(f"{player.name}, you've drawn a {drawn_card}. Your hand is now {player.display_hand()}")
+    if player.count() > 21:
+        print(f"Oh no! You've gone bust, {player.name}")
+    else:
+        player.choice()
+else:
+    dealer.choice()
 
 
 
