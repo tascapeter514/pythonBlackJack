@@ -2,14 +2,6 @@
 import random
 import sys
 
-#start the game
-a = input("WELCOME TO PETE'S BLACKJACK! TO START, TYPE 'yes' AND TO QUITE TYPE 'no'\n")
-if a.lower() == 'no':
-    sys.exit()
-else:
-    print("LET'S START SOME BLACKJACK BABY!")
-
-
 class Deck:
 
     def __init__(self, suits = ['S', 'H', 'D', 'C'], faces = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'], values = [x for x in range(52)]):
@@ -49,10 +41,22 @@ class Player:
     def choice(self):
         pass
 
+    # TOO WET. REFACTOR
+    def display_hand(self):
+        suits = {'S': '♤', 'H': '♡', 'D': '♦', 'C': '♧'}
+        display = []
+        for card in self.hand:
+            suit = list(card)[2] if len(card) > 2 else list(card)[1]
+            face = "".join(list(card)[:2]) if len(card) > 2 else list(card)[0]
+            c = face + suits[suit]
+            display.append(c)
+        return ' '.join(display)
+            
+
 class Human(Player):
     def choice(self):
         while self.count() <= 21:
-            c = input(f"Your hand is {self.hand}. Would you like to stand or hit?\n")
+            c = input(f"Your hand is {self.display_hand()}. Would you like to stand or hit?\n")
             if c != 'stand' and c != 'hit':
                 print('Please enter "stand" or "hit"')
             else:
@@ -62,41 +66,56 @@ class Dealer(Player):
     def choice(self):
         print(self.count())
         return 'stand' if self.count() >= 17 else 'hit'
+    
+
+
+def deal_round(d, dealer, player):
+    print('The game has started and the dealer is dealing out the cards.')
+    for i in range(4):
+        draw = d.deal()
+        dealer.draw_card(draw) if i % 2 == 0 else player.draw_card(draw)
+    return dealer.hand, player.hand
 
 
 
-dealer = Dealer('Bob')
+    
+    
 
-dealer.draw_card('JS')
-dealer.draw_card('10S')
-print(dealer.choice())
+# start the game
+a = input("WELCOME TO PETE'S BLACKJACK! TO START, TYPE 'yes' AND TO QUIT TYPE 'no'\n")
+if a.lower() == 'no':
+    sys.exit()
+else:
+    print("LET'S START SOME BLACKJACK BABY!")
 
+p = input("Please enter your name to begin: \n")
 
-
-
-
+dealer = Dealer('Killer BOB')
 player = Human('Petey')
 
-player.draw_card('JS')
-player.draw_card('5S')
-print(player.choice())
+print(f'Hello, {player.name}! Please meet your dealer {dealer.name}')
+
+deck = Deck().shuffle()
+
+round = deal_round(deck, dealer, player)
+print(f"Your hand is {player.display_hand()}\n {dealer.name}'s hand is {dealer.display_hand()}")
+
+if player.choice() == 'hit':
+    draw = deck.deal()
+    player.draw_card(draw)
+    drawn = player.display_hand()[-2:]
+    print(f"{player.name}, you've drawn a {type(player.display_hand())}. Your hand is now {player.display_hand()}")
 
 
-            
 
 
 
 
-# def deal_round():
-#     deck = Deck().shuffle()
-#     for i in range(4):
-#         draw = deck.deal()
-#         dealer.draw_card(draw) if i % 2 == 0 else player.draw_card(draw)
-#     # print(dealer.hand, player.hand)
 
-# deal_round()
-# print(dealer.hand, player.hand)
-# print(dealer.get_count(), player.get_count())
+
+
+
+
         
 
     
