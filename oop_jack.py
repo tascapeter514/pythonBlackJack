@@ -7,45 +7,81 @@ class Card:
 
     faces = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
     suits = ['S', 'H', 'D', 'C']
-    values = [x for x in range(52)]
     
     def __init__(self, value):
         self.value = value
         self.suit = self.suits[int(value/ 13)]
         self.face = str(self.faces[int(value % 13)])
 
-    def card(self):
+    def show(self):
         card = str(self.face) + str(self.suit)
         return card
 
-    def display(self):
+
+    def convert(self):
         suits = {'S': '♤', 'H': '♡', 'D': '♦', 'C': '♧'}
-        card = self.face + suits[self.suit]
-        return card
+        self.display = self.face + suits[self.suit]
+        return self
+
+
+class Hand:
+
+    def __init__(self):
+        self.hand = []
+    
+    def draw(self, card):
+        self.hand.append(card)
+        return self
+    
+    def show(self):
+        s = list(map(lambda c: c.show(), self.hand))
+        print(s)
+
+    def display(self):
+        d = [c.convert() for c in self.hand]
+        d = "".join(list(map(lambda c: c.display + ' ', self.hand)))
+        print(d)
+
+
+
+hand = Hand().draw(Card(12))
+hand.draw(Card(0))
+hand.display()
         
 
 
+        
+ 
+
+
+        
 class Deck:
-    values = [x for x in range(52)]
 
     def __init__(self):
-        self.deck = [Card(x).card() for x in self.values]
-
-    def deck(self):
-        return [x.card().card for x in self.deck]
-
+        self.deck = [Card(x) for x in range(52)]
 
     def shuffle(self):
-        for i in range(len(self._deck)):
+        for i in range(52):
             j = random.randint(0, i)
-            self._deck[i], self._deck[j] = self._deck[j], self._deck[i]
+            self.deck[i], self.deck[j] = self.deck[j], self.deck[i]
+        print('The deck has been shuffled.')
         return self
     
+    def show(self):
+        d = [x.card() for x in self.deck]
+        print(d)
+            
+            
+    # CALL THIS IN THE GAME INSTANCE?
     def deal(self):
-        return self._deck.pop()
-    
-deck = Deck().deck
-print(deck)
+        return self.deck.pop()
+
+
+
+# deck = Deck().shuffle()
+# card = deck.deal()
+# print(card)   
+
 
 class Player:
     def __init__(self, name):
