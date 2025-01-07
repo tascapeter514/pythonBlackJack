@@ -2,6 +2,39 @@
 import random
 import sys
 
+
+class Card:
+
+    faces = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
+    suits = ['S', 'H', 'D', 'C']
+    values = [x for x in range(52)]
+    
+    def __init__(self, value):
+        self.value = value
+        self.suit = self.suits[int(value/ 13)]
+        self.face = str(self.faces[int(value % 13)])
+
+    def card(self):
+        self.card = str(self.face) + str(self.suit)
+        return self
+
+    def display(self):
+        suits = {'S': '♤', 'H': '♡', 'D': '♦', 'C': '♧'}
+        card = self.face + suits[self.suit]
+        return card
+        
+
+
+
+
+        
+
+
+    
+
+ace_spade = Card(1).card()
+print(ace_spade.display())
+
 class Deck:
 
     def __init__(self, suits = ['S', 'H', 'D', 'C'], faces = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'], values = [x for x in range(52)]):
@@ -77,40 +110,37 @@ def deal_round(d, dealer, player):
     return dealer.hand, player.hand
 
 
-
-    
-    
-
 # start the game
-a = input("WELCOME TO PETE'S BLACKJACK! TO START, TYPE 'yes' AND TO QUIT TYPE 'no'\n")
-if a.lower() == 'no':
-    sys.exit()
-else:
-    print("LET'S START SOME BLACKJACK BABY!")
+# a = input("WELCOME TO PETE'S BLACKJACK! TO START, TYPE 'yes' AND TO QUIT TYPE 'no'\n")
+# if a.lower() == 'no':
+#     sys.exit()
+# else:
+#     print("LET'S START SOME BLACKJACK BABY!")
 
-p = input("Please enter your name to begin: \n")
+# p = input("Please enter your name to begin: \n")
 
-dealer = Dealer('Killer BOB')
-player = Human('Petey')
+# dealer = Dealer('Killer BOB')
+# player = Human('Petey')
 
-print(f'Hello, {player.name}! Please meet your dealer {dealer.name}')
+# print(f'Hello, {player.name}! Please meet your dealer {dealer.name}')
 
-deck = Deck().shuffle()
+# deck = Deck().shuffle()
 
-round = deal_round(deck, dealer, player)
-print(f"Your hand is {player.display_hand()}\n {dealer.name}'s hand is {dealer.display_hand()}")
+# round = deal_round(deck, dealer, player)
+# print(f"Your hand is {player.display_hand()}\n {dealer.name}'s hand is {dealer.display_hand()}")
 
-if player.choice() == 'hit':
-    draw = deck.deal()
-    player.draw_card(draw)
-    drawn_card = player.display_hand()[-2:]
-    print(f"{player.name}, you've drawn a {drawn_card}. Your hand is now {player.display_hand()}")
-    if player.count() > 21:
-        print(f"Oh no! You've gone bust, {player.name}")
-    else:
-        player.choice()
-else:
-    dealer.choice()
+# if player.choice() == 'hit':
+#     draw = deck.deal()
+#     player.draw_card(draw)
+#     drawn_card = player.display_hand()[-2:]
+#     print(f"{player.name}, you've drawn a {drawn_card}. Your hand is now {player.display_hand()}")
+#     if player.count() > 21:
+#         print(f"Oh no! You've gone bust, {player.name}")
+#     else:
+#         player.choice()
+# else:
+#     dealer.choice()
+
 
 
 
