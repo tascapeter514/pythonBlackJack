@@ -23,15 +23,11 @@ class Card:
         self.display = self.face + suits[self.suit]
         return self
 
-
+# CAN WE MAKE THE SHOW, DRAW, AND DISPLAY METHODS DRIER?
 class Hand:
 
-    def __init__(self):
-        self.hand = []
-    
-    def draw(self, card):
-        self.hand.append(card)
-        return self
+    def __init__(self, *cards):
+        self.hand = [*cards]
     
     def show(self):
         s = list(map(lambda c: c.show(), self.hand))
@@ -41,17 +37,33 @@ class Hand:
         d = [c.convert() for c in self.hand]
         d = "".join(list(map(lambda c: c.display + ' ', self.hand)))
         print(d)
+    
+
+    # PASS IN CARD OBJECT RATHER THAN STRING. CHANGE LATER?
+    def count(self):
+        # val = [int(c.face) for c in self.hand if c.face not in 'JQKA']
+        val = [int(c.face) if c.face not in 'JQKA' else 10 for c in self.hand]
+        print(sum(val))
 
 
 
-hand = Hand().draw(Card(12))
-hand.draw(Card(0))
-hand.display()
-        
+hand = Hand(Card(0), Card(11))
+hand.show()
+hand.count()
 
 
-        
- 
+
+
+# count = []
+#         for card in self.hand:
+#             value = list(card)[0] if len(list(card)) < 3 else card[0:2]
+#             if value not in 'JQKA':
+#                 count.append(int(value))
+#             else:
+#                 value = 10 if value in 'JQK' else 11
+#                 count.append(value)
+#         return sum(count)
+
 
 
         
@@ -77,22 +89,11 @@ class Deck:
         return self.deck.pop()
 
 
-
-# deck = Deck().shuffle()
-# card = deck.deal()
-# print(card)   
-
-
 class Player:
     def __init__(self, name):
         self.name = name
-        self.hand = []
 
-    def draw_card(self, card):
-        self.hand.append(card)
-        return self
 
-    
     def count(self):
         count = []
         for card in self.hand:
@@ -108,15 +109,7 @@ class Player:
         pass
 
     # TOO WET. REFACTOR
-    def display_hand(self):
-        suits = {'S': '♤', 'H': '♡', 'D': '♦', 'C': '♧'}
-        display = []
-        for card in self.hand:
-            suit = list(card)[2] if len(card) > 2 else list(card)[1]
-            face = "".join(list(card)[:2]) if len(card) > 2 else list(card)[0]
-            c = face + suits[suit]
-            display.append(c)
-        return ' '.join(display)
+
             
 
 class Human(Player):
