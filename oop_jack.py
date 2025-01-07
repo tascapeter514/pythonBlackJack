@@ -15,8 +15,8 @@ class Card:
         self.face = str(self.faces[int(value % 13)])
 
     def card(self):
-        self.card = str(self.face) + str(self.suit)
-        return self
+        card = str(self.face) + str(self.suit)
+        return card
 
     def display(self):
         suits = {'S': '♤', 'H': '♡', 'D': '♦', 'C': '♧'}
@@ -25,20 +25,14 @@ class Card:
         
 
 
-
-
-        
-
-
-    
-
-ace_spade = Card(1).card()
-print(ace_spade.display())
-
 class Deck:
+    values = [x for x in range(52)]
 
-    def __init__(self, suits = ['S', 'H', 'D', 'C'], faces = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'], values = [x for x in range(52)]):
-        self._deck = [str(faces[int(x % 13)]) + str(suits[int(x / 13)]) for x in range(52)]
+    def __init__(self):
+        self.deck = [Card(x).card() for x in self.values]
+
+    def deck(self):
+        return [x.card().card for x in self.deck]
 
 
     def shuffle(self):
@@ -49,6 +43,9 @@ class Deck:
     
     def deal(self):
         return self._deck.pop()
+    
+deck = Deck().deck
+print(deck)
 
 class Player:
     def __init__(self, name):
