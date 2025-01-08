@@ -58,10 +58,12 @@ class Player:
         d = d.format(self.name, card.convert().display)
         print(d)
         self.hand.append(card)
-        h = [c.convert() for c in self.hand]
-        h = "".join(list(map(lambda c: c.display + ' ', self.hand)))
-        print(f"hand is {h}")
+        # h = [c.convert() for c in self.hand]
+        # h = "".join(list(map(lambda c: c.display + ' ', self.hand)))
+        # print(f"hand is {h}")
 
+
+    # REFACTOR ONCE CONVERT METHOD IS SWITCHED TO DISPLAY
     def reveal(self):
         h = [c.convert() for c in self.hand]
         h = "".join(list(map(lambda c: c.display + ' ', self.hand)))
@@ -69,18 +71,12 @@ class Player:
 
         
         
-
-
-
-
-
-
 class Human(Player):
 
     def hit(self, card):
         print(card.convert().display)
-        self.hand.add(card)
-        print(f"player hand: {self.hand.display()}")
+        self.hand.append(card)
+        # print(f"player hand: {self.hand.display()}")
 
 
 
@@ -100,7 +96,7 @@ class Game:
     #     print("LET'S START SOME BLACKJACK BABY!")
 
     # number_of_players = int(input('How many players would you like to begin with?'))
-    track_count = []
+    count = {}
 
 
     def __init__(self):
@@ -114,6 +110,19 @@ class Game:
         w = '{} has won this round'
         w = w.format(player)
         print(w)
+    
+    def track_count(self):
+        for player in self.players:
+            hand = player.hand
+            val = sum([int(c.face) if c.face not in 'JQKA' else 10 for c in hand])
+            if self.count[player.name]:
+                self.count[player.name] += val
+            else:
+                self.count[player.name] = val
+        print(self.count)
+        
+
+
 
     def play_game(self):
 
@@ -125,6 +134,17 @@ class Game:
         dealer = self.dealer
         player.reveal()
         dealer.reveal()
+        game.track_count()
+        while any(c < 22 for c in self.count.values()):
+            choice = input("Would you like to hit or stand?\n")
+            if choice == 'hit':
+                player.hit(deck.deal())
+                player.reveal()
+                game.track_count
+                print(self.count)
+            if choice == 'stand':
+                break
+            
         
 game = Game()
 game.play_game()
