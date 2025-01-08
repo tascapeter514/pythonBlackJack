@@ -24,28 +24,7 @@ class Card:
         return self
 
 # CAN WE MAKE THE SHOW, DRAW, AND DISPLAY METHODS DRIER?
-class Hand:
 
-    def __init__(self, *cards):
-        self.hand = [*cards]
-    
-    def show(self):
-        s = list(map(lambda c: c.show(), self.hand))
-        print(s)
-
-    def display(self):
-        d = [c.convert() for c in self.hand]
-        d = "".join(list(map(lambda c: c.display + ' ', self.hand)))
-        print(d)
-    
-
-    # PASS IN CARD OBJECT RATHER THAN STRING. CHANGE LATER?
-    def count(self):
-        # val = [int(c.face) for c in self.hand if c.face not in 'JQKA']
-        val = [int(c.face) if c.face not in 'JQKA' else 10 for c in self.hand]
-        print(sum(val))
-
- 
 class Deck:
 
     def __init__(self):
@@ -66,49 +45,104 @@ class Deck:
     def deal(self):
         return self.deck.pop()
 
+class Hand:
+
+
+    # WE NEED TO BE ABLE TO ADD TO THE HAND
+    def __init__(self, cards):
+        self.hand = cards
+
+    def add(self, c):
+        self.hand.append(c)
+        print(self.hand)
+    
+    def show(self):
+        s = list(map(lambda c: c.show(), self.hand))
+        print(s)
+
+    def display(self):
+        d = [c.convert() for c in self.hand]
+        d = "".join(list(map(lambda c: c.display + ' ', self.hand)))
+        return d
+    
+
+    # PASS IN CARD OBJECT RATHER THAN STRING. CHANGE LATER?
+    def count(self):
+        # val = [int(c.face) for c in self.hand if c.face not in 'JQKA']
+        val = [int(c.face) if c.face not in 'JQKA' else 10 for c in self.hand]
+        self.count = sum(val)
+        return self
+
+# deck = Deck().shuffle()
+# cards = [deck.deal(), deck.deal()]
+# hand = Hand(cards)
+# hand.add(deck.deal())
+
+ 
+
+
 # SHOULD THE HAND BE A LIST PROPERTY INSIDE THE PLAYER?
 class Player:
     def __init__(self, name):
         self.name = name
         self.hand = []
 
-    def draw(self, cards):
-        for c in cards.hand:
-            print(c)
-        # for c in cards.hand:
-        #     d = '{} drew {}.'
-        #     d = d.format(self.name, c)
-        #     print(d)
+    def draw(self, h):
+        self.hand = h
+        d = '{} drew a {}'
+        d = d.format(self.name, self.hand.display())
+        return self
+        print(d)
+
+
 
 
     def choice(self):
         pass
 
-    # TOO WET. REFACTOR
 
-            
+
 
 class Human(Player):
-    def choice(self):
-        while self.count() <= 21:
-            c = input(f"Your hand is {self.display_hand()}. Would you like to stand or hit?\n")
-            if c != 'stand' and c != 'hit':
-                print('Please enter "stand" or "hit"')
-            else:
-                return c
+
+    def hit(self, card):
+        print(card.convert().display)
+        self.hand.add(card)
+        print(f"player hand: {self.hand.display()}")
+        # self.hand.append(card)
+
+
+
+    # def choice(self):
+    #     count = self.hand.count()
+    #     print(count)
+    #     while count <= 21:
+    #         c = input(f"Your hand is {self.hand.display()}. Would you like to stand or hit?\n")
+    #         if c != 'stand' and c != 'hit':
+    #             print('Please enter "stand" or "hit"')
+    #         else:
+    #             return c
 
 class Dealer(Player):
     def choice(self):
+        print(self.hand.count())
         print(self.count())
         return 'stand' if self.count() >= 17 else 'hit'
 
+# deck = Deck().shuffle()
+# player_hand = Hand([deck.deal(), deck.deal()])
+
+
+# player = Human('Petey').draw(player_hand)
+# player.choice()
+# dealer = Dealer('KILLER BOB')
 
 class Game:
-    a = input("WELCOME TO PETE'S BLACKJACK! TO START, TYPE 'yes' AND TO QUIT TYPE 'no'\n")
-    if a.lower() == 'no':
-        sys.exit()
-    else:
-        print("LET'S START SOME BLACKJACK BABY!")
+    # a = input("WELCOME TO PETE'S BLACKJACK! TO START, TYPE 'yes' AND TO QUIT TYPE 'no'\n")
+    # if a.lower() == 'no':
+    #     sys.exit()
+    # else:
+    #     print("LET'S START SOME BLACKJACK BABY!")
 
     def __init__(self):
         p1 = input("Please enter your name to begin: \n")
@@ -117,18 +151,45 @@ class Game:
         self.dealer = Dealer(d)
         self.players = [self.dealer, self.player]
 
+    def win(self, player):
+        w = '{} has won this round'
+        w = w.format(player)
+        print(w)
+
     def play_game(self):
         player = self.player
         dealer = self.dealer
         print(f'Hello, {player.name}! Please meet your dealer {dealer.name}')
         deck = Deck().shuffle()
+        hands = []
         for r in range(2):
             cards = []
             for p in self.players:
                 card = deck.deal()
                 cards.append(card)
             hand = Hand(cards)
-        print(hand)
+            hands.append(hand)
+        for p in self.players:
+            p.draw(hands.pop())
+        print(f"player count: {player.hand.count().count}")
+        # COUNT NEEDS TO BE UPDATED
+        # while player.hand.count() and dealer.hand.count() <= 21:
+        choice = input(f"Your hand is {player.hand.display()}. Would you like to stand or hit?\n")
+        if choice == "hit":
+            player.hit(deck.deal())
+            player.count()
+            print(f"first hit: {player.hand.count}")
+            player.hit(deck.deal())
+            player.count()
+            print(f"second hit: {player.hand.count}")
+
+        
+        
+        
+        
+        
+
+            
             
 
 
