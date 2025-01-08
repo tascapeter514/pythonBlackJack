@@ -45,28 +45,7 @@ class Hand:
         val = [int(c.face) if c.face not in 'JQKA' else 10 for c in self.hand]
         print(sum(val))
 
-
-
-hand = Hand(Card(0), Card(11))
-hand.show()
-hand.count()
-
-
-
-
-# count = []
-#         for card in self.hand:
-#             value = list(card)[0] if len(list(card)) < 3 else card[0:2]
-#             if value not in 'JQKA':
-#                 count.append(int(value))
-#             else:
-#                 value = 10 if value in 'JQK' else 11
-#                 count.append(value)
-#         return sum(count)
-
-
-
-        
+ 
 class Deck:
 
     def __init__(self):
@@ -82,28 +61,25 @@ class Deck:
     def show(self):
         d = [x.card() for x in self.deck]
         print(d)
-            
-            
+                
     # CALL THIS IN THE GAME INSTANCE?
     def deal(self):
         return self.deck.pop()
 
-
+# SHOULD THE HAND BE A LIST PROPERTY INSIDE THE PLAYER?
 class Player:
     def __init__(self, name):
         self.name = name
+        self.hand = []
 
+    def draw(self, cards):
+        for c in cards.hand:
+            print(c)
+        # for c in cards.hand:
+        #     d = '{} drew {}.'
+        #     d = d.format(self.name, c)
+        #     print(d)
 
-    def count(self):
-        count = []
-        for card in self.hand:
-            value = list(card)[0] if len(list(card)) < 3 else card[0:2]
-            if value not in 'JQKA':
-                count.append(int(value))
-            else:
-                value = 10 if value in 'JQK' else 11
-                count.append(value)
-        return sum(count)
 
     def choice(self):
         pass
@@ -125,15 +101,59 @@ class Dealer(Player):
     def choice(self):
         print(self.count())
         return 'stand' if self.count() >= 17 else 'hit'
+
+
+class Game:
+    a = input("WELCOME TO PETE'S BLACKJACK! TO START, TYPE 'yes' AND TO QUIT TYPE 'no'\n")
+    if a.lower() == 'no':
+        sys.exit()
+    else:
+        print("LET'S START SOME BLACKJACK BABY!")
+
+    def __init__(self):
+        p1 = input("Please enter your name to begin: \n")
+        d = 'Killer Bob'
+        self.player = Human(p1)
+        self.dealer = Dealer(d)
+        self.players = [self.dealer, self.player]
+
+    def play_game(self):
+        player = self.player
+        dealer = self.dealer
+        print(f'Hello, {player.name}! Please meet your dealer {dealer.name}')
+        deck = Deck().shuffle()
+        for r in range(2):
+            cards = []
+            for p in self.players:
+                card = deck.deal()
+                cards.append(card)
+            hand = Hand(cards)
+        print(hand)
+            
+
+
+
+game = Game()
+game.play_game()
+
+        
+
+
+
+        
+
+
+
+
     
 
 
-def deal_round(d, dealer, player):
-    print('The game has started and the dealer is dealing out the cards.')
-    for i in range(4):
-        draw = d.deal()
-        dealer.draw_card(draw) if i % 2 == 0 else player.draw_card(draw)
-    return dealer.hand, player.hand
+# def deal_round(d, dealer, player):
+#     print('The game has started and the dealer is dealing out the cards.')
+#     for i in range(4):
+#         draw = d.deal()
+#         dealer.draw_card(draw) if i % 2 == 0 else player.draw_card(draw)
+#     return dealer.hand, player.hand
 
 
 # start the game
