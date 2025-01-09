@@ -111,15 +111,35 @@ class Game:
         w = w.format(player)
         print(w)
     
-    def track_count(self):
-        for player in self.players:
-            hand = player.hand
-            val = sum([int(c.face) if c.face not in 'JQKA' else 10 for c in hand])
-            if self.count[player.name]:
-                self.count[player.name] += val
-            else:
+    def set_count(self):
+            for player in self.players:
+                val = sum([int(c.face) if c.face not in 'JQKA' else 10 for c in player.hand])
                 self.count[player.name] = val
-        print(self.count)
+    
+    def get_count(self, p):
+        val = sum([int(c.face) if c.face not in 'JQKA' else 10 for c in p.hand])
+        self.count[p.name] = val
+
+
+
+        
+
+    
+
+        
+
+    
+
+
+        #     if player.name not in self.count.keys():
+        #         print('player not name check')
+        #         self.count[player.name] = val
+                
+        #     else:
+        #         print('player name check')
+        #         self.count[player.name] += val
+        #         print(player.name, self.count.keys())
+        # print(self.count)
         
 
 
@@ -134,13 +154,13 @@ class Game:
         dealer = self.dealer
         player.reveal()
         dealer.reveal()
-        game.track_count()
+        game.set_count()
         while any(c < 22 for c in self.count.values()):
             choice = input("Would you like to hit or stand?\n")
             if choice == 'hit':
                 player.hit(deck.deal())
                 player.reveal()
-                game.track_count
+                game.get_count(player)
                 print(self.count)
             if choice == 'stand':
                 break
