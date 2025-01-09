@@ -77,10 +77,9 @@ class Human(Player):
 
 
 class Dealer(Player):
-    def hit(self):
-        print(self.hand.count())
-        print(self.count())
-        return 'stand' if self.count() >= 17 else 'hit'
+    def hit(self, card):
+        print(card.convert().display)
+        self.hand.append(card)
 
 
 #PLAYER AND DEALER COUNT NEEDS TO BE A PROPERTY OF GAME
@@ -102,10 +101,21 @@ class Game:
         self.dealer = Dealer(d)
         self.players = [self.dealer, self.player]
 
-    def win(self, player):
+    def win(self):
+        print(self.count)
+        winner = self.player.name if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer.name
+        print('winner:', winner)
         w = '{} has won this round'
-        w = w.format(player)
+        w = w.format(winner)
         print(w)
+
+    def bust(self):
+        print(self.count)
+        loser = self.player.name if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer.name
+        print('loser:', loser)
+        l = '{} has gone bust.'
+        l = l.format(loser)
+        print(l)
     
     def set_count(self):
             for player in self.players:
@@ -116,7 +126,19 @@ class Game:
         val = sum([int(c.face) if c.face not in 'JQKA' else 10 for c in p.hand])
         self.count[p.name] = val
 
+    def replay(self):
+        replay = input("Do you wish to play again?\n")
+        if replay.lower() == 'no':
+            sys.exit
+        else:
+            self.count = {}
+            self.player.hand.clear(), self.dealer.hand.clear()
+            self.play_game()
+            
+
     def play_game(self):
+        print(f'Welcome. You are facing the notorious {self.dealer.name}')
+        print('The deck is about to be shuffled.')
         deck = Deck().shuffle()
         for r in range(2):
             for p in self.players:
@@ -133,13 +155,30 @@ class Game:
                 player.reveal()
                 self.get_count(player)
             if choice == 'stand':
-                break
-            # WRITE THE DEALER HIT LOGIC
-
-        # WRITE THE WIN AND REPLAY LOGIC
+                print(self.count[dealer.name])
+                if self.count[dealer.name] < 17:
+                    dealer.hit(deck.deal())
+                    self.get_count(dealer)
+                    print(self.count)
+                else:
+                    self.win()
+                    self.replay()
+                    
+        self.bust()
+        self.replay()
         
 
 game = Game()
+game.play_game()
+        
+
+
+                  
+                
+                
+        
+
+
 
             
         
