@@ -58,9 +58,6 @@ class Player:
         d = d.format(self.name, card.convert().display)
         print(d)
         self.hand.append(card)
-        # h = [c.convert() for c in self.hand]
-        # h = "".join(list(map(lambda c: c.display + ' ', self.hand)))
-        # print(f"hand is {h}")
 
 
     # REFACTOR ONCE CONVERT METHOD IS SWITCHED TO DISPLAY
@@ -76,12 +73,11 @@ class Human(Player):
     def hit(self, card):
         print(card.convert().display)
         self.hand.append(card)
-        # print(f"player hand: {self.hand.display()}")
 
 
 
 class Dealer(Player):
-    def choice(self):
+    def hit(self):
         print(self.hand.count())
         print(self.count())
         return 'stand' if self.count() >= 17 else 'hit'
@@ -120,32 +116,7 @@ class Game:
         val = sum([int(c.face) if c.face not in 'JQKA' else 10 for c in p.hand])
         self.count[p.name] = val
 
-
-
-        
-
-    
-
-        
-
-    
-
-
-        #     if player.name not in self.count.keys():
-        #         print('player not name check')
-        #         self.count[player.name] = val
-                
-        #     else:
-        #         print('player name check')
-        #         self.count[player.name] += val
-        #         print(player.name, self.count.keys())
-        # print(self.count)
-        
-
-
-
     def play_game(self):
-
         deck = Deck().shuffle()
         for r in range(2):
             for p in self.players:
@@ -154,20 +125,24 @@ class Game:
         dealer = self.dealer
         player.reveal()
         dealer.reveal()
-        game.set_count()
-        while any(c < 22 for c in self.count.values()):
+        self.set_count()
+        while all(c < 22 for c in self.count.values()):
             choice = input("Would you like to hit or stand?\n")
             if choice == 'hit':
                 player.hit(deck.deal())
                 player.reveal()
-                game.get_count(player)
-                print(self.count)
+                self.get_count(player)
             if choice == 'stand':
                 break
+            # WRITE THE DEALER HIT LOGIC
+
+        # WRITE THE WIN AND REPLAY LOGIC
+        
+
+game = Game()
+
             
         
-game = Game()
-game.play_game()
 
     
 
