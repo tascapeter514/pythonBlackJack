@@ -78,7 +78,7 @@ class Human(Player):
 
 class Dealer(Player):
     def hit(self, card):
-        print(card.convert().display)
+        print('dealer card:', card.convert().display)
         self.hand.append(card)
 
 
@@ -102,7 +102,7 @@ class Game:
         self.players = [self.dealer, self.player]
 
     def win(self):
-        print(self.count)
+        print('final count:', self.count)
         winner = self.player.name if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer.name
         print('winner:', winner)
         w = '{} has won this round'
@@ -154,16 +154,15 @@ class Game:
                 player.hit(deck.deal())
                 player.reveal()
                 self.get_count(player)
-            if choice == 'stand':
-                print(self.count[dealer.name])
-                if self.count[dealer.name] < 17:
+            elif choice == 'stand':
+                print("dealer:", self.count[dealer.name])
+                while self.count[dealer.name] < 17:
                     dealer.hit(deck.deal())
                     self.get_count(dealer)
-                    print(self.count)
-                else:
+                    print('count:', self.count)
+                if self.count[dealer.name] < 22:
                     self.win()
-                    self.replay()
-                    
+                    self.replay() 
         self.bust()
         self.replay()
         
