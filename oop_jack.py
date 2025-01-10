@@ -1,6 +1,13 @@
-
 import random
 import sys
+import time
+
+
+def typewriter(text, delay=0.05):
+    for char in text:
+        print(char)
+        time.sleep(delay)
+
 
 
 class Card:
@@ -17,7 +24,7 @@ class Card:
         card = str(self.face) + str(self.suit)
         return card
 
-    # REFACTOR SO IT DISPLAYS AND DOESN'T RETURNS
+    # REFACTOR SO IT DISPLAYS AND DOESN'T RETURN
     def convert(self):
         suits = {'S': '♤', 'H': '♡', 'D': '♦', 'C': '♧'}
         self.display = self.face + suits[self.suit]
