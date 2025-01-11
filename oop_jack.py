@@ -113,16 +113,25 @@ class Game:
 # loser.reveal() and winner.reveal() are returning None
 # winner and loser are returning the same variable, not alternate variables
     def win(self):
-        winner = self.player if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer
-        w = '{} has won this round with {}'
-        w = w.format(winner.name, winner.reveal())
-        print(w)
+        print('win check')
+        if self.count[self.player.name] == self.count[self.dealer.name]:
+            print("It's a draw!")
+        else: 
+            winner = self.player if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer
+            loser = self.player if self.count[self.player.name] < self.count[self.dealer.name] else self.dealer
+            print(f"The count is {self.count}. The winner is {winner.name} and the loser is {loser.name}")
+        # w = '{} has won this round with {}'
+        # w = w.format(winner.name, winner.reveal())
+        # print(w)
 
     def bust(self):
+        print('bust check')
         loser = self.player if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer
-        l = '{} has gone bust with {}.'
-        l = l.format(loser.name, loser.reveal())
-        print(l)
+        winner = self.player if self.count[self.player.name] < self.count[self.dealer.name] else self.dealer
+        print(f"The count is {self.count}. The loser is {loser.name} and the winner is {winner.name}")
+        # l = '{} has gone bust with {}.'
+        # l = l.format(loser.name, loser.reveal())
+        # print(l)
     
     def set_count(self):
             for player in self.players:
@@ -170,7 +179,7 @@ class Game:
                     self.win()
                     self.replay() 
         self.bust()
-        self.win()
+        # self.win()
         self.replay()
         
 
