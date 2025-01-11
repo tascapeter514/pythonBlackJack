@@ -20,9 +20,6 @@ class Card:
         self.suit = self.suits[int(value/ 13)]
         self.face = str(self.faces[int(value % 13)])
 
-    def show(self):
-        card = str(self.face) + str(self.suit)
-        return card
 
     # REFACTOR SO IT DISPLAYS AND DOESN'T RETURN
     def convert(self):
@@ -43,10 +40,6 @@ class Deck:
             self.deck[i], self.deck[j] = self.deck[j], self.deck[i]
         print('The deck has been shuffled.')
         return self
-    
-    def show(self):
-        d = [x.card() for x in self.deck]
-        print(d)
                 
     # CALL THIS IN THE GAME INSTANCE?
     def deal(self):
@@ -72,21 +65,26 @@ class Player:
         h = [c.convert() for c in self.hand]
         h = "".join(list(map(lambda c: c.display + ' ', self.hand)))
         print(f"{self.name} has {h}")
-
-        
-        
-class Human(Player):
-
+    
     def hit(self, card):
-        print(card.convert().display)
         self.hand.append(card)
 
-
-
+        
 class Dealer(Player):
-    def hit(self, card):
-        print('dealer card:', card.convert().display)
+    def reveal(self):
+        i = random.randint(0, 1)
+        c = self.hand[i].convert()
+        print(f"{self.name} has drawn a {c.display} The other card is covered.")
+
+    def draw(self, card):
         self.hand.append(card)
+
+
+# deck = Deck().shuffle()
+# dealer = Dealer('Martin')
+# dealer.draw(deck.deal())
+# dealer.draw(deck.deal())
+# dealer.reveal()
 
 
 #PLAYER AND DEALER COUNT NEEDS TO BE A PROPERTY OF GAME
@@ -103,25 +101,27 @@ class Game:
 
     def __init__(self):
         p1 = input("Please enter your name to begin: \n")
-        d = 'Killer Bob'
-        self.player = Human(p1)
+        d = 'Martin Heidegger'
+        self.player = Player(p1)
         self.dealer = Dealer(d)
         self.players = [self.dealer, self.player]
 
+
+
+# wind and bust need to be refactored
+# the player is being called both as winner and loser
+# loser.reveal() and winner.reveal() are returning None
+# winner and loser are returning the same variable, not alternate variables
     def win(self):
-        print('final count:', self.count)
-        winner = self.player.name if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer.name
-        print('winner:', winner)
-        w = '{} has won this round'
-        w = w.format(winner)
+        winner = self.player if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer
+        w = '{} has won this round with {}'
+        w = w.format(winner.name, winner.reveal())
         print(w)
 
     def bust(self):
-        print(self.count)
-        loser = self.player.name if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer.name
-        print('loser:', loser)
-        l = '{} has gone bust.'
-        l = l.format(loser)
+        loser = self.player if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer
+        l = '{} has gone bust with {}.'
+        l = l.format(loser.name, loser.reveal())
         print(l)
     
     def set_count(self):
@@ -144,33 +144,33 @@ class Game:
             
 
     def play_game(self):
-        print(f'Welcome. You are facing the notorious {self.dealer.name}')
+        # print(f'Welcome. You are facing the notorious {self.dealer.name}')
+        print(f"Welcome. Your dealer, {self.dealer.name}, is quite drunk. You sidle up to the table, ready to take advantage of his bibulous state.")
         print('The deck is about to be shuffled.')
         deck = Deck().shuffle()
         for r in range(2):
             for p in self.players:
                 p.draw(deck.deal())
-        player = self.player
-        dealer = self.dealer
-        player.reveal()
-        dealer.reveal()
+        for p in self.players:
+            p.reveal()
         self.set_count()
         while all(c < 22 for c in self.count.values()):
             choice = input("Would you like to hit or stand?\n")
             if choice == 'hit':
-                player.hit(deck.deal())
-                player.reveal()
-                self.get_count(player)
+                self.player.hit(deck.deal())
+                self.player.reveal()
+                self.get_count(self.player)
             elif choice == 'stand':
-                print("dealer:", self.count[dealer.name])
-                while self.count[dealer.name] < 17:
-                    dealer.hit(deck.deal())
-                    self.get_count(dealer)
-                    print('count:', self.count)
-                if self.count[dealer.name] < 22:
+                while self.count[self.dealer.name] < 17:
+                    self.dealer.hit(deck.deal())
+                    self.get_count(self.dealer)
+                if self.count[self.dealer.name] < 22:
+                    for player in self.players:
+                        player.reveal()
                     self.win()
                     self.replay() 
         self.bust()
+        self.win()
         self.replay()
         
 
