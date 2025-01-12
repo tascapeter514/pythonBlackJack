@@ -1,12 +1,5 @@
 import random
 import sys
-import time
-
-
-def typewriter(text, delay=0.05):
-    for char in text:
-        print(char)
-        time.sleep(delay)
 
 
 
@@ -22,12 +15,22 @@ class Card:
 
 
     # REFACTOR SO IT DISPLAYS AND DOESN'T RETURN
-    def convert(self):
-        suits = {'S': '♤', 'H': '♡', 'D': '♦', 'C': '♧'}
-        self.display = self.face + suits[self.suit]
-        return self
+    # def convert(self):
+    #     suits = {'S': '♤', 'H': '♡', 'D': '♦', 'C': '♧'}
+    #     self.display = self.face + suits[self.suit]
+    #     return self
 
-# CAN WE MAKE THE SHOW, DRAW, AND DISPLAY METHODS DRIER?
+
+
+def displayCard(c):
+    suits = {'S': '♤', 'H': '♡', 'D': '♦', 'C': '♧'}
+    return c.face + suits[c.suit]
+
+# card = Card(1)
+# print(displayCard(card))
+
+
+
 
 class Deck:
 
@@ -45,7 +48,20 @@ class Deck:
     def deal(self):
         return self.deck.pop()
 
-# SHOULD THE HAND BE A LIST PROPERTY INSIDE THE PLAYER?
+
+def displayHand(h):
+    h = [displayCard(c) for c in h]
+    h = " ".join(h)
+    print(h)
+
+card1 = Card(0)
+card2 = Card(1)
+card3 = Card(10)
+hand = [card1, card2, card3]
+displayHand(hand)
+
+
+
 class Player:
 
     # initial card array passed to each player
@@ -63,7 +79,7 @@ class Player:
     # REFACTOR ONCE CONVERT METHOD IS SWITCHED TO DISPLAY
     def reveal(self):
         print('parent reveal check')
-        h = [c.convert() for c in self.hand]
+        h = [displayCard(c) for c in self.hand]
         h = "".join(list(map(lambda c: c.display + ' ', self.hand)))
         print(f"{self.name} has drawn {h}")
 
@@ -193,8 +209,8 @@ class Game:
         self.replay()
         
 
-game = Game()
-game.play_game()
+# game = Game()
+# game.play_game()
         
 
 
