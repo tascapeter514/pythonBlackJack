@@ -54,17 +54,25 @@ class Player:
         self.hand = []
 
     def draw(self, card):
-        d = '{} drew a {}'
-        d = d.format(self.name, card.convert().display)
-        print(d)
+        # d = '{} drew a {}'
+        # d = d.format(self.name, card.convert().display)
+        # print(d)
         self.hand.append(card)
 
 
     # REFACTOR ONCE CONVERT METHOD IS SWITCHED TO DISPLAY
     def reveal(self):
+        print('parent reveal check')
         h = [c.convert() for c in self.hand]
         h = "".join(list(map(lambda c: c.display + ' ', self.hand)))
-        print(f"{self.name} has {h}")
+        print(f"{self.name} has drawn {h}")
+
+    def show(self):
+        s = [c.convert() for c in self.hand]
+        s = "".join(list(map(lambda c: c.display + ' ', self.hand)))
+        return s
+
+
     
     def hit(self, card):
         self.hand.append(card)
@@ -75,6 +83,7 @@ class Dealer(Player):
         i = random.randint(0, 1)
         c = self.hand[i].convert()
         print(f"{self.name} has drawn a {c.display} The other card is covered.")
+
 
     def draw(self, card):
         self.hand.append(card)
@@ -113,25 +122,26 @@ class Game:
 # loser.reveal() and winner.reveal() are returning None
 # winner and loser are returning the same variable, not alternate variables
     def win(self):
-        print('win check')
+        
         if self.count[self.player.name] == self.count[self.dealer.name]:
-            print("It's a draw!")
+            d = "It's a draw. {} has {} and {} has {}"
+            d = d.format(self.player.name, self.player.show(), self.dealer.name, self.dealer.show())
         else: 
             winner = self.player if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer
             loser = self.player if self.count[self.player.name] < self.count[self.dealer.name] else self.dealer
-            print(f"The count is {self.count}. The winner is {winner.name} and the loser is {loser.name}")
-        # w = '{} has won this round with {}'
-        # w = w.format(winner.name, winner.reveal())
-        # print(w)
+            # print(f"The count is {self.count}. The winner is {winner.name} and the loser is {loser.name}")
+            w = '{} has won this round with {}'
+            w = w.format(winner.name, winner.show())
+            print(w)
 
     def bust(self):
         print('bust check')
         loser = self.player if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer
         winner = self.player if self.count[self.player.name] < self.count[self.dealer.name] else self.dealer
-        print(f"The count is {self.count}. The loser is {loser.name} and the winner is {winner.name}")
-        # l = '{} has gone bust with {}.'
-        # l = l.format(loser.name, loser.reveal())
-        # print(l)
+        # print(f"The count is {self.count}. The loser is {loser.name} and the winner is {winner.name}")
+        l = '{} has gone bust with {}. {} wins with {}'
+        l = l.format(loser.name, loser.show(), winner.name, winner.show())
+        print(l)
     
     def set_count(self):
             for player in self.players:
@@ -175,7 +185,7 @@ class Game:
                     self.get_count(self.dealer)
                 if self.count[self.dealer.name] < 22:
                     for player in self.players:
-                        player.reveal()
+                        player.show()
                     self.win()
                     self.replay() 
         self.bust()
