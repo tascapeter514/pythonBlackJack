@@ -1,5 +1,8 @@
 import random
 import sys
+import pyfiglet
+from pyfiglet import Figlet
+
 
 
 
@@ -50,16 +53,15 @@ class Player:
         self.hand.append(card)
 
       
-
-
-
-#PLAYER AND DEALER COUNT NEEDS TO BE A PROPERTY OF GAME
 class Game:
-    # a = input("WELCOME TO PETE'S BLACKJACK! TO START, TYPE 'yes' AND TO QUIT TYPE 'no'\n")
-    # if a.lower() == 'no':
-    #     sys.exit()
-    # else:
-    #     print("LET'S START SOME BLACKJACK BABY!")
+    t = Figlet(font='slant')
+    welcome_text = t.renderText("PETE'S BLACKJACK")
+    
+    a = input(f"WELCOME TO \n {welcome_text} TO START, TYPE 'yes' AND TO QUIT TYPE 'no'\n")
+    if a.lower() == 'no':
+        sys.exit()
+    else:
+        print("LET'S START SOME BLACKJACK BABY!")
 
     # number_of_players = int(input('How many players would you like to begin with?'))
     
@@ -71,21 +73,14 @@ class Game:
         self.players = [self.dealer, self.player]
         self.count = {}
 
-    def set_count(self):
+    def start_count(self):
         for player in self.players:
             val = sum([int(c.face) if c.face not in 'JQKA' else 10 for c in player.hand])
             self.count[player.name] = val
-        print("set count:", self.count)
-    
-    def get_count(self, p):
+
+    def update_count(self, p):
         val = sum([int(c.face) if c.face not in 'JQKA' else 10 for c in p.hand])
         self.count[p.name] = val
-
-    # def winner(self):
-    #     print('winner count:', self.count)
-    #     w = self.player if self.count[self.player.name] < 22 and self.count[self.player.name] > self.count[self.dealer.name] else self.dealer
-    #     print('winner:', w.name)
-    #     return w
         
     def loser(self):
         if any(c > 22 for c in self.count.values()):
@@ -100,7 +95,6 @@ class Game:
             return self.player if self.count[self.player.name] > self.count[self.dealer.name] else self.dealer
 
     def outcome(self):
-        print('outcome function check')
         if self.count[self.player.name] == self.count[self.dealer.name]:
             print(f"It's a draw. {self.player.name} has {displayHand(self.player.hand)} and {self.dealer.name} has {displayHand(self.dealer.hand)}")
         else:
@@ -131,28 +125,26 @@ class Game:
                 print(f"{p.name} has drawn a {displayCard(p.hand[1])}")
             else:
                 print(f"{p.name} has drawn a {displayHand(p.hand)}")
-        self.set_count()
+        self.start_count()
         while all(c < 22 for c in self.count.values()):
             choice = input("Would you like to hit or stand?\n")
             if choice == 'hit':
                 self.player.draw(deck.deal())
                 print(f"{self.player.name} has drawn a {displayCard(self.player.hand[len(self.player.hand) - 1])}")
-                self.get_count(self.player)
-                print(self.count)
+                self.update_count(self.player)
             elif choice == 'stand':
                 while self.count[self.dealer.name] < 17:
                     self.dealer.draw(deck.deal())
                     print(f"{self.dealer.name} has drawn a {displayCard(self.dealer.hand[len(self.dealer.hand) - 1])}")
-                    self.get_count(self.dealer)
-                    print(self.count)
+                    self.update_count(self.dealer)
                 if self.count[self.dealer.name] < 22:
-                    print('inner outcome check')
                     self.outcome()
                     break
-                self.replay()
-        print('inner outcome check')             
-        self.bust()
-        self.replay()
+        if any(c > 22 for c in self.count.values()):             
+            self.bust()
+            self.replay()
+        else:
+            self.replay()
 
 
         
